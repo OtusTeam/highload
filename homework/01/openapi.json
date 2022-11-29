@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OTUS Highload Architect",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "description": "Упрощенный процесс аутентификации путем передачи идентификатор пользователя и получения токена для дальнейшего прохождения авторизации в остальных методах",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешная авторизаця",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь не найден"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "description": "Регистрация нового пользователя",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "Имя"
+                  },
+                  "second_name": {
+                    "type": "string",
+                    "example": "Фамилия"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "example": 18
+                  },
+                  "biography": {
+                    "type": "string",
+                    "example": "Хобби, интересы и т.п."
+                  },
+                  "city": {
+                    "type": "string",
+                    "example": "Москва"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная регистрация",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user_id": {
+                      "type": "string",
+                      "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Невалидные данные"
+          }
+        }
+      }
+    },
+    "/user/get/{id}": {
+      "get": {
+        "description": "Получение анкеты пользователя",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор пользователя"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное получение анкеты пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Анкета не найдена"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Идентификатор пользователя"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Имя",
+            "description": "Имя"
+          },
+          "second_name": {
+            "type": "string",
+            "example": "Фамилия",
+            "description": "Фамилия"
+          },
+          "age": {
+            "type": "integer",
+            "example": 18,
+            "description": "Возраст"
+          },
+          "biography": {
+            "type": "string",
+            "example": "Хобби, интересы и т.п.",
+            "description": "Интересы"
+          },
+          "city": {
+            "type": "string",
+            "example": "Москва",
+            "description": "Город"
+          }
+        }
+      }
+    }
+  }
+}
