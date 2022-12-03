@@ -49,7 +49,7 @@
         }
       }
     },
-    "/user/register": {
+    "/user/add": {
       "post": {
         "description": "Регистрация нового пользователя",
         "requestBody": {
