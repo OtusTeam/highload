@@ -34,8 +34,17 @@
               }
             }
           },
+          "400": {
+            "description": "Невалидные данные"
+          },
           "404": {
             "description": "Пользователь не найден"
+          },
+          "500": {
+            "$ref": "#/components/responses/5xx"
+          },
+          "503": {
+            "$ref": "#/components/responses/5xx"
           }
         }
       }
@@ -93,6 +102,12 @@
           },
           "400": {
             "description": "Невалидные данные"
+          },
+          "500": {
+            "$ref": "#/components/responses/5xx"
+          },
+          "503": {
+            "$ref": "#/components/responses/5xx"
           }
         }
       }
@@ -118,14 +133,104 @@
               }
             }
           },
+          "400": {
+            "description": "Невалидные данные"
+          },
           "404": {
             "description": "Анкета не найдена"
+          },
+          "500": {
+            "$ref": "#/components/responses/5xx"
+          },
+          "503": {
+            "$ref": "#/components/responses/5xx"
+          }
+        }
+      }
+    },
+    "/user/search": {
+      "get": {
+        "description": "Поиск анкет",
+        "parameters": [
+          {
+            "name": "first_name",
+            "in": "query",
+            "required": false,
+            "description": "Условие поиска по имени"
+          },
+          {
+            "name": "last_name",
+            "in": "query",
+            "required": false,
+            "description": "Условие поиска по фамилии"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешные поиск пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Невалидные данные"
+          },
+          "500": {
+            "$ref": "#/components/responses/5xx"
+          },
+          "503": {
+            "$ref": "#/components/responses/5xx"
           }
         }
       }
     }
   },
   "components": {
+    "responses": {
+      "5xx": {
+        "description": "Ошибка сервера",
+        "headers": {
+          "Retry-After": {
+            "description": "Время, через которое еще раз нужно сделать запрос",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "required": true,
+                  "description": "Описание ошибки"
+                },
+                "request_id": {
+                  "type": "string",
+                  "required": false,
+                  "description": "Идентификатор запроса. Предназначен для более быстрого поиска проблем."
+                },
+                "code": {
+                  "type": "integer",
+                  "required": false,
+                  "description": "Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
