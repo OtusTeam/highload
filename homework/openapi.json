@@ -8,15 +8,25 @@
     "/login": {
       "post": {
         "description": "Упрощенный процесс аутентификации путем передачи идентификатор пользователя и получения токена для дальнейшего прохождения авторизации",
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "query",
-            "schema": {
-              "type": "integer"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "234"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Секретная строка"
+                  }
+                }
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Успешная аутентификация",
@@ -49,7 +59,7 @@
         }
       }
     },
-    "/user/add": {
+    "/user/register": {
       "post": {
         "description": "Регистрация нового пользователя",
         "requestBody": {
@@ -77,7 +87,11 @@
                   "city": {
                     "type": "string",
                     "example": "Москва"
-                  }
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Секретная строка"
+                  },
                 }
               }
             }
