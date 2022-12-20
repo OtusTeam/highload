@@ -169,13 +169,13 @@
           {
             "name": "first_name",
             "in": "query",
-            "required": false,
+            "required": true,
             "description": "Условие поиска по имени"
           },
           {
             "name": "last_name",
             "in": "query",
-            "required": false,
+            "required": true,
             "description": "Условие поиска по фамилии"
           }
         ],
