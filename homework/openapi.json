@@ -91,7 +91,7 @@
                   "password": {
                     "type": "string",
                     "example": "Секретная строка"
-                  },
+                  }
                 }
               }
             }
