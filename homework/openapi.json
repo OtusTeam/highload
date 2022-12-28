@@ -132,6 +132,12 @@
         "parameters": [
           {
             "name": "id",
+            "schema": {
+              "type": "string",
+              "description": "Идентификатор пользователя",
+              "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+            },
+            "required": true,
             "in": "path",
             "description": "Идентификатор пользователя"
           }
@@ -168,12 +174,22 @@
         "parameters": [
           {
             "name": "first_name",
+            "schema": {
+              "type": "string",
+              "description": "Часть имени для поиска",
+              "example": "Конст"
+            },
             "in": "query",
             "required": true,
             "description": "Условие поиска по имени"
           },
           {
             "name": "last_name",
+            "schema": {
+              "type": "string",
+              "description": "Часть фамилии для поиска",
+              "example": "Оси"
+            },
             "in": "query",
             "required": true,
             "description": "Условие поиска по фамилии"
@@ -223,20 +239,18 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": ["message"],
               "properties": {
                 "message": {
                   "type": "string",
-                  "required": true,
                   "description": "Описание ошибки"
                 },
                 "request_id": {
                   "type": "string",
-                  "required": false,
                   "description": "Идентификатор запроса. Предназначен для более быстрого поиска проблем."
                 },
                 "code": {
                   "type": "integer",
-                  "required": false,
                   "description": "Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем."
                 }
               }
