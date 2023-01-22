@@ -339,7 +339,7 @@
         }
       }
     },
-    "/post/edit": {
+    "/post/update": {
       "put": {
         "security": [
           {
