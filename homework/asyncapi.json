@@ -1,0 +1,89 @@
+{
+  "asyncapi": "2.6.0",
+  "info": {
+    "title": "OTUS Highload Architect Async",
+    "description": "Спецификация асинхронного взаимодействия приложения, которое создается в процессе выполнения домашних заданий на курсе Highload Architect",
+    "version": "1.0.0",
+    "license": {
+      "name": "not-specified"
+    },
+    "contact": {
+      "name": "OTUS",
+      "url": "https://otus.ru/",
+      "email": "help@otus.ru"
+    }
+  },
+  "id": "https://github.com/OtusTeam/highload",
+  "defaultContentType": "application/json",
+  "tags": [{
+    "name": "otus"
+  },{
+    "name": "highload architect"
+  }],
+  "servers": {
+    "prod": {
+      "url": "localhost",
+      "protocol": "ws",
+      "security": [{
+        "userToken": []
+      }]
+    }
+  },
+  "channels": {
+    "/post/feed/posted": {
+      "description": "Канал используется для быстрого обновления ленты постов от друзей пользователя",
+      "subscribe": {
+        "description": "Событие публикации поста одного из друзей пользователя",
+        "operationId": "postFeedPosted",
+        "message": {
+          "$ref": "#/components/messages/Post"
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "userToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Авторизация по токену, который был получен из метода REST API /login"
+      }
+    },
+    "schemas": {
+      "PostId": {
+        "type": "string",
+        "description": "Идентификатор поста",
+        "example": "1d535fd6-7521-4cb1-aa6d-031be7123c4d"
+      },
+      "PostText": {
+        "type": "string",
+        "description": "Текст поста",
+        "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus mauris ultrices eros in cursus turpis massa."
+      },
+      "UserId": {
+        "type": "string",
+        "description": "Идентификатор пользователя",
+        "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+      }
+    },
+    "messages": {
+      "Post": {
+        "messageId": "post",
+        "payload": {
+          "type": "object",
+          "properties": {
+            "postId": {
+              "$ref": "#/components/schemas/PostId"
+            },
+            "postText": {
+              "$ref": "#/components/schemas/PostText"
+            },
+            "author_user_id": {
+              "$ref": "#/components/schemas/UserId"
+            }
+          }
+        }
+      }
+    }
+  }
+}
