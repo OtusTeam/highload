@@ -15,8 +15,7 @@
                 "type": "object",
                 "properties": {
                   "id": {
-                    "type": "string",
-                    "example": "234"
+                    "$ref": "#/components/schemas/UserId"
                   },
                   "password": {
                     "type": "string",
@@ -675,8 +674,7 @@
       },
       "UserId": {
         "type": "string",
-        "description": "Идентификатор пользователя",
-        "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+        "description": "Идентификатор пользователя"
       },
       "User": {
         "type": "object",
