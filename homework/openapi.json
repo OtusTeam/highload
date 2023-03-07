@@ -77,8 +77,12 @@
                     "example": "Фамилия"
                   },
                   "age": {
+                    "deprecated": true,
                     "type": "integer",
                     "example": 18
+                  },
+                  "birthdate": {
+                    "$ref": "#/components/schemas/BirthDate"
                   },
                   "biography": {
                     "type": "string",
@@ -663,6 +667,12 @@
       }
     },
     "schemas": {
+      "BirthDate": {
+        "type": "string",
+        "description": "Дата рождения",
+        "format": "date",
+        "example": "2017-02-01"
+      },
       "UserId": {
         "type": "string",
         "description": "Идентификатор пользователя",
@@ -688,6 +698,9 @@
             "type": "integer",
             "example": 18,
             "description": "Возраст"
+          },
+          "birthdate": {
+            "$ref": "#/components/schemas/BirthDate"
           },
           "biography": {
             "type": "string",
