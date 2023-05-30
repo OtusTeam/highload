@@ -15,8 +15,7 @@
                 "type": "object",
                 "properties": {
                   "id": {
-                    "type": "string",
-                    "example": "234"
+                    "$ref": "#/components/schemas/UserId"
                   },
                   "password": {
                     "type": "string",
@@ -77,8 +76,12 @@
                     "example": "Фамилия"
                   },
                   "age": {
+                    "deprecated": true,
                     "type": "integer",
                     "example": 18
+                  },
+                  "birthdate": {
+                    "$ref": "#/components/schemas/BirthDate"
                   },
                   "biography": {
                     "type": "string",
@@ -663,10 +666,15 @@
       }
     },
     "schemas": {
+      "BirthDate": {
+        "type": "string",
+        "description": "Дата рождения",
+        "format": "date",
+        "example": "2017-02-01"
+      },
       "UserId": {
         "type": "string",
-        "description": "Идентификатор пользователя",
-        "example": "e4d2e6b0-cde2-42c5-aac3-0b8316f21e58"
+        "description": "Идентификатор пользователя"
       },
       "User": {
         "type": "object",
@@ -688,6 +696,9 @@
             "type": "integer",
             "example": 18,
             "description": "Возраст"
+          },
+          "birthdate": {
+            "$ref": "#/components/schemas/BirthDate"
           },
           "biography": {
             "type": "string",
