@@ -1,70 +1,102 @@
 # Репликация в Postgres
 
 1. Создаем сеть, запоминаем адрес
-```shell
-docker network create pgnet
-docker network inspect pgnet | grep Subnet
-```
+    ```shell
+    docker network create pgnet
+    docker network inspect pgnet | grep Subnet # Запомнить маску сети
+    ```
 
-2. Поднимаем master
-```shell
-docker run -dit -v $PWD/volumes/pgmaster/:/var/lib/postgresql/data -e POSTGRES_PASSWORD=pass -p 5432:5432 --restart=unless-stopped --network=pgnet --name=pgmaster postgres
-```
+2. Поднимаем мастер
+    ```shell
+    docker run -dit -v "$PWD/volumes/pgmaster/:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=pass -p "5432:5432" --restart=unless-stopped --network=pgnet --name=pgmaster postgres
+    ```
 
 3. Меняем postgresql.conf на мастере
-
-ssl = off
-wal_level = replica
-max_wal_senders = 4 # expected slave num
+    ```conf
+    ssl = off
+    wal_level = replica
+    max_wal_senders = 4 # expected slave num
+    ```
 
 4. Подключаемся к мастеру и создаем пользователя для репликации
+    ```shell
+    docker exec -it pgmaster su - postgres -c psql
+    create role replicator with login replication password 'pass';
+    exit
+    ```
 
-docker exec -it pgmaster su - postgres -c psql
+5. Добавляем запись в `pgmaster/pg_hba.conf` с `subnet` с первого шага
+```
+host    replication     replicator       __SUBNET__          md5
+```
 
-create role replicator with login replication password 'pass';
-
-6. Добавляем запись в pg_hba.conf с ip с первого шага
-
-host    replication  replicator  172.16.0.0/16  md5
-
-7. Перезапустим мастера
-
+6. Перезапустим мастер
+```shell
 docker restart pgmaster
+```
 
-8.  Сделаем бэкап для реплик
-
+7. Сделаем бэкап для реплик
+```shell
 docker exec -it pgmaster bash
-
 mkdir /pgslave
-
 pg_basebackup -h pgmaster -D /pgslave -U replicator -v -P --wal-method=stream
+exit
+```
 
-9. Копируем директорию себе
+8. Копируем директорию себе
+```shell
+docker cp pgmaster:/pgslave volumes/pgslave/
+```
 
-docker cp pgmaster:/pgslave pgslave
+9. Создадим файл, чтобы реплика узнала, что она реплика
+```shell
+touch volumes/pgslave/standby.signal
+```
 
-10. Создадим файл, чтобы реплика узнала, что она реплика
-
-touch pgslave/standby.signal
-
-11. Меняем postgresql.conf на реплике
-
+10. Меняем `postgresql.conf` на реплике `pgslave`
+```conf
 primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgslave'
+```
 
-12. Запускаем реплику
-docker run -dit -v $PWD/pgslave/:/var/lib/postgresql/data -e POSTGRES_PASSWORD=pass -p 15432:5432 --network=pgnet --restart=unless-stopped --name=pgslave postgres
+11. Запускаем реплику `pgslave`
+    ```shell
+    docker run -dit -v "$PWD/volumes/pgslave/:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=pass -p "15432:5432" --network=pgnet --restart=unless-stopped --name=pgslave postgres
+    ```
 
-13. Запустим вторую реплику
+12. Запустим вторую реплику `pgasyncslave`
+- скопируем бэкап
+    ```shell
+    docker cp pgmaster:/pgslave volumes/pgasyncslave/
+    ```
 
-docker cp pgmaster:/pgslave pgasyncslave
+- изменим настройки `pgasyncslave/postgresql.conf`
+    ```conf
+    primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgasyncslave'
+    ```
 
-primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgasyncslave'
+- дадим знать что это реплика
+    ```shell
+    touch volumes/pgasyncslave/standby.signal
+    ```
 
-touch pgasyncslave/standby.signal
+- запустим реплику `pgasyncslave`
+    ```shell
+    docker run -dit -v "$PWD/volumes/pgasyncslave/:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=pass -p "25432:5432" --network=pgnet --restart=unless-stopped --name=pgasyncslave postgres
+    ```
 
-docker run -dit -v $PWD/pgasyncslave/:/var/lib/postgresql/data -e POSTGRES_PASSWORD=pass -p 25432:5432 --network=pgnet --restart=unless-stopped --name=pgasyncslave postgres
+1.  Включаем сихнронную репликацию на `pgmaster`
+- меняем файл `pgmaster/postgresql.conf`
+    ```conf
+    synchronous_commit = on
+    synchronous_standby_names = 'FIRST 1 (pgslave, pgasyncslave)'
+    ```
 
-14. Включаем синхронную репликацию
+- перечитываем конфиг
+    ```shell
+    ```
+
+1.  Включаем синхронную репликацию
+2.  
 
 synchronous_commit = on
 synchronous_standby_names = 'FIRST 1 (pgslave, pgasyncslave)'
