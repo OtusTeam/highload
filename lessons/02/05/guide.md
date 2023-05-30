@@ -5,13 +5,13 @@
 docker network create pgnet
 docker network inspect pgnet | grep Subnet
 ```
-2. Поднимаем мастера
 
+1. Поднимаем мастера
 ```shell
 docker run -dit -v $PWD/pgmaster/:/var/lib/postgresql/data -e POSTGRES_PASSWORD=pass -p 5432:5432 --restart=unless-stopped --network=pgnet --name=pgmaster postgres
 ```
 
-3. Меняем postgresql.conf на мастере
+1. Меняем postgresql.conf на мастере
 
 ssl = off
 wal_level = replica
