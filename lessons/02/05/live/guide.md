@@ -26,37 +26,37 @@
     ```
 
 5. Добавляем запись в `pgmaster/pg_hba.conf` с `subnet` с первого шага
-```
-host    replication     replicator       __SUBNET__          md5
-```
+    ```
+    host    replication     replicator       __SUBNET__          md5
+    ```
 
 6. Перезапустим мастер
-```shell
-docker restart pgmaster
-```
+    ```shell
+    docker restart pgmaster
+    ```
 
 7. Сделаем бэкап для реплик
-```shell
-docker exec -it pgmaster bash
-mkdir /pgslave
-pg_basebackup -h pgmaster -D /pgslave -U replicator -v -P --wal-method=stream
-exit
-```
+    ```shell
+    docker exec -it pgmaster bash
+    mkdir /pgslave
+    pg_basebackup -h pgmaster -D /pgslave -U replicator -v -P --wal-method=stream
+    exit
+    ```
 
 8. Копируем директорию себе
-```shell
-docker cp pgmaster:/pgslave volumes/pgslave/
-```
+    ```shell
+    docker cp pgmaster:/pgslave volumes/pgslave/
+    ```
 
 9. Создадим файл, чтобы реплика узнала, что она реплика
-```shell
-touch volumes/pgslave/standby.signal
-```
+    ```shell
+    touch volumes/pgslave/standby.signal
+    ```
 
 10. Меняем `postgresql.conf` на реплике `pgslave`
-```conf
-primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgslave'
-```
+    ```conf
+    primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgslave'
+    ```
 
 11. Запускаем реплику `pgslave`
     ```shell
@@ -64,39 +64,39 @@ primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass applic
     ```
 
 12. Запустим вторую реплику `pgasyncslave`
-- скопируем бэкап
-    ```shell
-    docker cp pgmaster:/pgslave volumes/pgasyncslave/
-    ```
+    - скопируем бэкап
+        ```shell
+        docker cp pgmaster:/pgslave volumes/pgasyncslave/
+        ```
 
-- изменим настройки `pgasyncslave/postgresql.conf`
-    ```conf
-    primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgasyncslave'
-    ```
+    - изменим настройки `pgasyncslave/postgresql.conf`
+        ```conf
+        primary_conninfo = 'host=pgmaster port=5432 user=replicator password=pass application_name=pgasyncslave'
+        ```
 
-- дадим знать что это реплика
-    ```shell
-    touch volumes/pgasyncslave/standby.signal
-    ```
+    - дадим знать что это реплика
+        ```shell
+        touch volumes/pgasyncslave/standby.signal
+        ```
 
-- запустим реплику `pgasyncslave`
-    ```shell
-    docker run -dit -v "$PWD/volumes/pgasyncslave/:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=pass -p "25432:5432" --network=pgnet --restart=unless-stopped --name=pgasyncslave postgres
-    ```
+    - запустим реплику `pgasyncslave`
+        ```shell
+        docker run -dit -v "$PWD/volumes/pgasyncslave/:/var/lib/postgresql/data" -e POSTGRES_PASSWORD=pass -p "25432:5432" --network=pgnet --restart=unless-stopped --name=pgasyncslave postgres
+        ```
 
-1.  Включаем сихнронную репликацию на `pgmaster`
-- меняем файл `pgmaster/postgresql.conf`
-    ```conf
-    synchronous_commit = on
-    synchronous_standby_names = 'FIRST 1 (pgslave, pgasyncslave)'
-    ```
+13. Включаем сихнронную репликацию на `pgmaster`
+    - меняем файл `pgmaster/postgresql.conf`
+        ```conf
+        synchronous_commit = on
+        synchronous_standby_names = 'FIRST 1 (pgslave, pgasyncslave)'
+        ```
 
-- перечитываем конфиг
-    ```shell
-    ```
+    - перечитываем конфиг
+        ```shell
+        ```
 
-1.  Включаем синхронную репликацию
-2.  
+14. Включаем синхронную репликацию
+15. 
 
 synchronous_commit = on
 synchronous_standby_names = 'FIRST 1 (pgslave, pgasyncslave)'
