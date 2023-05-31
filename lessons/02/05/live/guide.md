@@ -114,6 +114,7 @@
 
 17. Создадим тестовую таблицу на `pgmaster` и проверим репликацию
     ```shell
+    docker exec -it pgmaster su - postgres -c psql
     create table test(id bigint primary key not null);
     insert into test(id) values(1);
     select * from test;
@@ -241,7 +242,7 @@
         ```
 
 ## Логическая репликация
-1. Меняем wal_level для текущего мастера `pgslave`
+1. Меняем `wal_level` для текущего мастера `pgslave`
    1. Изменяем настройки `pgslave/postgresql.conf`
         ```conf
         wal_level = logical
