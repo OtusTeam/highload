@@ -75,11 +75,6 @@
                     "type": "string",
                     "example": "Фамилия"
                   },
-                  "age": {
-                    "deprecated": true,
-                    "type": "integer",
-                    "example": 18
-                  },
                   "birthdate": {
                     "$ref": "#/components/schemas/BirthDate"
                   },
@@ -691,11 +686,6 @@
             "type": "string",
             "example": "Фамилия",
             "description": "Фамилия"
-          },
-          "age": {
-            "type": "integer",
-            "example": 18,
-            "description": "Возраст"
           },
           "birthdate": {
             "$ref": "#/components/schemas/BirthDate"
