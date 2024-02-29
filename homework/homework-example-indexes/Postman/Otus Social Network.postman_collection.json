@@ -1,0 +1,141 @@
+{
+	"info": {
+		"_postman_id": "468d7e63-3158-416a-b282-c5e41fde6f28",
+		"name": "Otus Social Network",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2464907"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\": \"a8edbe9c-2700-474b-ad06-b1d74dab2b79\",\r\n    \"Password\": \"qwerty\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by Id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3MDkxNTUxMDAsImV4cCI6MTcwOTE1ODcwMCwiaXNzIjoib3R1cy5zb2NpYWwubmV0d29yayIsImF1ZCI6Im90dXMuc29jaWFsLm5ldHdvcmsifQ.ulyynuJFmBwKfQJvF8tz85NZqc1uSz6ZiGbszLIhKdM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/user/get/a8edbe9c-2700-474b-ad06-b1d74dab2b79",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"get",
+						"a8edbe9c-2700-474b-ad06-b1d74dab2b79"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3MDkxNTUxMDAsImV4cCI6MTcwOTE1ODcwMCwiaXNzIjoib3R1cy5zb2NpYWwubmV0d29yayIsImF1ZCI6Im90dXMuc29jaWFsLm5ldHdvcmsifQ.ulyynuJFmBwKfQJvF8tz85NZqc1uSz6ZiGbszLIhKdM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/user/search?firstName=Авд&lastName=А",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"search"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "Авд"
+						},
+						{
+							"key": "lastName",
+							"value": "А"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\": \"qwerty\",\r\n    \"second_name\": \"qwerty\",\r\n    \"age\": 89,\r\n    \"sex\": \"qwerty\",\r\n    \"biography\": \"qwerty\",\r\n    \"city\": \"qwerty\",\r\n    \"password\": \"qwerty\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

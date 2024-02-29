@@ -1,0 +1,53 @@
+﻿version: "3.9"
+
+services:
+  otus-db:
+    image: postgres:14
+    build:
+      context: ./Postgres
+      dockerfile: ./Dockerfile
+    container_name: otus-db
+    environment:
+      POSTGRES_DB: "otusdb"
+      POSTGRES_USER: "dbuser"
+      POSTGRES_PASSWORD: "dbpassword"
+    mem_limit: 512m
+    ports:
+      - 5432:5432
+    volumes:
+      - ./Postgres:/docker-entrypoint-initdb.d # Инициализация таблиц
+      - ./volumes/Database/data:/var/lib/postgresql/data # Папка, где postgres будет хранить данные
+      - ./volumes/Database/backups:/backups # Папка для бекапов
+    networks:
+      - otus-network
+  otus-api:
+    image: otus-api-image
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: otus-api
+    restart: always
+    environment:
+      # Основные настройки для работы API
+      ASPNETCORE_URLS: "http://+:5000"
+      AllowedHosts: "*" # Ограничивает хосты, которые могут подключаться к API. По умолчанию - все
+      # Строка подключения к базе данных Postgres
+      DatabaseSettings:ConnStr: "Host=otus-db;Port=5432;Username=dbuser;Password=dbpassword;Database=otusdb;Pooling=true;"
+      # Настройки генерации токена авторизации
+      JWTSettings:Key: "verystrongkeyforauthtoken"
+      JWTSettings:Issuer: otus.social.network
+      JWTSettings:Audience: otus.social.network
+      JWTSettings:DurationInMinutes: "60"
+    user: "555:555"
+    ports:
+      - 5000:5000
+    mem_limit: 1024m
+    entrypoint: dotnet OtusSocialNetwork.dll
+    depends_on:
+      - otus-db
+    networks:
+      - otus-network
+networks:
+  otus-network:
+    driver: bridge
+
