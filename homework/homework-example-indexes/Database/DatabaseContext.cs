@@ -126,8 +126,15 @@ public class DatabaseContext : IDatabaseContext, IDisposable
         }
         else
         {
-            sql += " ORDER BY id LIMIT 100;";
-            items = con.Query<UserEntity>(sql);
+            firstName = RandomNames.GetRandomFirstName();
+            lastName = RandomNames.GetRandomSecondName();
+
+            sql += "WHERE first_name LIKE @firstname AND second_name LIKE @secondname ORDER BY id;";
+            items = con.Query<UserEntity>(sql, new
+            {
+                firstname = $"{firstName}%",
+                secondname = $"{lastName}%",
+            });
         }
 
         return (true, "OK", items.ToList());

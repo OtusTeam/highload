@@ -20,6 +20,18 @@ CREATE INDEX user_first_name_idx ON public."user" using btree (first_name text_p
 --- После добавления индекса имеет смысл выполнить запрос ANALYZE
 ```
 
+### Добавляем индекс через bash
+
+```bash 
+docker exec -it otus-db psql -U dbuser -d otusdb -c 'CREATE INDEX user_first_name_idx ON public."user" using btree (first_name text_pattern_ops,second_name text_pattern_ops) ; ANALYZE; '
+```
+
+### Удаляем индекс через bash
+
+```bash 
+docker exec -it otus-db psql -U dbuser -d otusdb -c 'DROP INDEX user_first_name_idx; ANALYZE;'
+```
+
 ## Запрос для проверки
 
 ```sql
