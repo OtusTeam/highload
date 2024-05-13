@@ -3,9 +3,6 @@
 services:
   otus-db:
     image: postgres:14
-    build:
-      context: ./Postgres
-      dockerfile: ./Dockerfile
     container_name: otus-db
     environment:
       POSTGRES_DB: "otusdb"
@@ -38,7 +35,6 @@ services:
       JWTSettings:Issuer: otus.social.network
       JWTSettings:Audience: otus.social.network
       JWTSettings:DurationInMinutes: "60"
-    user: "555:555"
     ports:
       - 5000:5000
     mem_limit: 1024m
